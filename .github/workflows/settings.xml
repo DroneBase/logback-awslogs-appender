@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <!-- Maven settings for use by github actions for building and publishing the project. -->
+    <profiles>
+        <profile>
+            <id>default</id>
+            <repositories>
+                <repository>
+                    <id>db-insights</id>
+                    <name>GitHub DroneBase Apache Maven Packages</name>
+                    <url>https://maven.pkg.github.com/DroneBase/ams-webapi</url>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+    <servers>
+        <!-- Used to authenticate to github packages for uploading artifacts of the build. -->
+        <server>
+            <id>github</id>
+            <username>${env.GITHUB_ACTOR}</username>
+            <password>${env.GITHUB_TOKEN}</password>
+        </server>
+        <!-- Allows for DroneBase's artifacts be pulled from the DroneBase private repositories hosted in github
+           - packages.  This settings.xml is used by github actions when it builds the project.  It requires that the
+           - MAVEN_REPO_USERNAME and MAVEN_REPO_PASSWORD environment variables (aka Config Vars) be populated using a
+           - proper username and encrypted personal access token by the workflow script.
+           -
+           - MAVEN_REPO_USERNAME is the github login for a user which has access to the repository.
+           - MAVEN_REPO_PASSWORD is a github personal access token wet up in the user's github account.  It is
+           -                     recommended that the token only be given the read:packages scope.  To create a
+           -                     personal access token, go to your user's settings in github.  Select "Developer
+           -                     Settings" in the tab list on the left.  Finally, select "Personal access tokens" on
+           -                     the "Developer Settings" page.
+           -
+           - See https://docs.github.com/en/packages/using-github-packages-with-your-projects-ecosystem/configuring-apache-maven-for-use-with-github-packages
+           - See http://maven.apache.org/guides/mini/guide-encryption.html
+           -->
+        <server>
+            <id>db-insights</id>
+            <username>${env.MAVEN_REPO_USERNAME}</username>
+            <password>${env.MAVEN_REPO_PASSWORD}</password>
+        </server>
+    </servers>
+
+    <activeProfiles>
+        <activeProfile>default</activeProfile>
+    </activeProfiles>
+</settings>
